@@ -5,11 +5,11 @@ A bioinformatics protocol for analysing genotypes using restriction site associa
 I. [Introduction](#Introduction)  
 II. [Software requirements](#Software-requirements)  
 III. [SNP calling protocol](#SNP-calling-protocol)  
-IV. [Diversity analysis protocol](#Diversity-analysis-protocol)  
-
+IV. [Diversity analysis protocol](#Diversity-analysis-protocol)
+V. [References](#References)
 
 ## Introduction <a name="Introduction"></a>  
-XXXX Cite PBJ paper and talk about diff.
+Reduced representation sequencing (RRS) encompasses a suite of methods for sampling a limited number of regions from a genome for DNA sequencing (Scheben et al., 2017). The main advantage of RRS over whole genome sequencing is that it substantially reduces the cost of generating sequencing data with adequate coverage for accurately calling single nucleotide polymorphisms (SNPs). Several RRS approaches including RAD-seq (Miller et al., 2007; Baird et al., 2008) and ddRAD-seq (Peterson et al., 2012) use restriction enzymes to digest the genome. DNA fragments within a suitable size range are then sequenced. In this bioinformatics protocol we will go through the most common steps in the ddRAD-seq analysis pipeline, starting with raw reads and concluding with an exploration of genetic structure and diversity. 
 
 ## Software requirements <a name="Software-requirements"></a>
 * Stacks : http://catchenlab.life.illinois.edu/stacks/
@@ -89,3 +89,5 @@ XXX
 ``vcf2phylip.py``
 ``RAxML``
 ``Rscript``
+
+## References <a name="References"></a>  
