@@ -5,7 +5,7 @@ A bioinformatics protocol for analysing genotypes using restriction site associa
 I. [Introduction](#Introduction)  
 II. [Software requirements](#Software-requirements)  
 III. [SNP calling protocol](#SNP-calling-protocol)  
-IV. [Diversity analysis protocol](#Diversity-analysis-protocol) 
+IV. [Diversity analysis protocol](#Diversity-analysis-protocol)  
 V. [References](#References)
 
 ## Introduction <a name="Introduction"></a>  
@@ -29,22 +29,22 @@ Reduced representation sequencing (RRS) encompasses a suite of methods for sampl
 * RAxML : https://cme.h-its.org/exelixis/software.html
 * ggtree : https://github.com/GuangchuangYu/ggtree
 
-I recommend installing these tools using the package manager [conda](https://conda.io/en/latest/) in a Linux environment. On Windows systems, it is possible to use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about), rather than using a virtual machine. In my experience some incompatibilites between tools cannot be resolved, therefore it may be necessary to create multiple conda environments for different tasks. For example to create an evironment for demultiplexing and quality control, one could use:
+I recommend installing these tools using the package manager [conda](https://conda.io/en/latest/) in a Linux environment. On Windows systems, it is possible to use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about), rather than using a virtual machine. In my experience some incompatibilites between tools cannot be resolved, therefore it may be necessary to create multiple conda environments for different tasks. For example to create an evironment for demultiplexing and quality control, one could use:  
 `conda create -n myenv -c bioconda python=3.5 stacks trimmomatic fastqc multiqc mash`
-The environment can then be loaded at any time with:
+The environment can then be loaded at any time with:  
 `conda activate myenv`
 
 ## SNP calling protocol <a name="SNP-calling-protocol"></a>  
 XXX
 ### Demultiplexing and adapter trimming
-``bcl2fastq``
-``process_radtags``
-``trimmomatic``
+``bcl2fastq``  
+``process_radtags``  
+``trimmomatic``  
 
 ### Quality control of reads
-``fastqc``
-``multiqc``
-``mash``
+``fastqc``  
+``multiqc``  
+``mash``  
 
 ### De novo and reference based SNP calling
 XXX
@@ -52,10 +52,10 @@ XXX
 #### De novo assembly and SNP calling
 Link to stacks homepage. Refer to manual pipeline for large datasets. Note that cstacks is most computationally intensive step and can be run in batches and results combined.
 
-Assemble and call
-``denovo_map.pl``
-Export vcf
-``populations``
+Assemble and call  
+``denovo_map.pl``  
+Export vcf  
+``populations``  
 
 Discuss crucial parameters for denovo_map.pl and link to Paris paper to show how to best explore parameter space for optimized denovo assembly of stacks.
 
@@ -63,14 +63,14 @@ Discuss crucial parameters for denovo_map.pl and link to Paris paper to show how
 
 Include references that suggest bwa-mem + samtools/bcftools is most effective
 
-``bwa-mem`` 
-``gstacks``
-``samtools``
-``bcftools``
+``bwa-mem``   
+``gstacks``  
+``samtools``  
+``bcftools``  
 
 ### Filtering SNPs
 
-``vcftools`` 
+``vcftools``  
 
 ## Diversity analysis protocol <a name="Diversity-analysis-protocol"></a>  
 XXX
@@ -83,13 +83,13 @@ XXX
 ``Rscript``
 
 ### Structure analysis
-``plink`` 
+``plink``   
 ``structure.py`` 
 
 ### Inferring a maximum likelihood phylogenetic tree
-``filtHet.py``
-``vcf2phylip.py``
-``RAxML``
-``Rscript``
+``filtHet.py``  
+``vcf2phylip.py``  
+``RAxML``  
+``Rscript``  
 
 ## References <a name="References"></a>  
