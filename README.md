@@ -29,13 +29,13 @@ Reduced representation sequencing (RRS) encompasses a suite of methods for sampl
 * RAxML : https://cme.h-its.org/exelixis/software.html
 * ggtree : https://github.com/GuangchuangYu/ggtree
 
-I recommend installing these tools using the package manager [conda](https://conda.io/en/latest/) in a Linux environment. On Windows systems, it is possible to use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about), rather than using a virtual machine. In my experience some incompatibilites between tools cannot be resolved, therefore it may be necessary to create multiple conda environments for different tasks. For example to create an evironment for demultiplexing and quality control, one could use:  
-`conda create -n myenv -c bioconda python=3.5 stacks trimmomatic fastqc multiqc mash`
+I recommend installing these tools using the package manager [conda](https://conda.io/en/latest/) in a Linux environment. On Windows systems, it is possible to use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about), rather than using a virtual machine. In my experience some incompatibilites between tools cannot be resolved, therefore it may be necessary to create multiple conda environments for different tasks. For example, to create an evironment for demultiplexing and quality control, one could use:  
+`conda create -n myenv -c bioconda python=3.5 stacks trimmomatic fastqc multiqc mash`  
 The environment can then be loaded at any time with:  
 `conda activate myenv`
 
 ## SNP calling protocol <a name="SNP-calling-protocol"></a>  
-XXX
+SNP calling is simple from a users perspective when a high-quality reference genome is available, as is the case for most model organisms. In non-model organisms without reference genomes, reads are generally assembled de novo in order to call SNPs. De novo assembly remains an error-prone task and therefore, as a general rule, reference-based SNP calling is preferred.
 ### Demultiplexing and adapter trimming
 ``bcl2fastq``  
 ``process_radtags``  
