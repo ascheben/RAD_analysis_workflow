@@ -12,22 +12,22 @@ IV. [Diversity analysis protocol](#Diversity-analysis-protocol)
 XXXX Cite PBJ paper and talk about diff.
 
 ## Software requirements <a name="Software-requirements"></a>
-*Stacks : http://catchenlab.life.illinois.edu/stacks/
-*trimmomatic : http://www.usadellab.org/cms/?page=trimmomatic
-*fastqc : https://www.bioinformatics.babraham.ac.uk/projects/download.html
-*multiqc : https://multiqc.info/
-*mash : https://github.com/marbl/Mash
-*BWA : https://sourceforge.net/projects/bio-bwa/files/    
-*SAMtools : http://www.htslib.org/download/        
-*BCFtools : http://www.htslib.org/download/  
-*VCFtools : https://github.com/vcftools/vcftools
-*SNPRelate : https://github.com/zhengxwen/SNPRelate
-*plink : http://zzz.bwh.harvard.edu/plink/download.shtml
-*fastStructure : https://rajanil.github.io/fastStructure/
-*pophelper : https://github.com/royfrancis/pophelper
-*vcf2phy : https://github.com/edgardomortiz/vcf2phylip
-*RAxML : https://cme.h-its.org/exelixis/software.html
-*ggtree : https://github.com/GuangchuangYu/ggtree
+* Stacks : http://catchenlab.life.illinois.edu/stacks/
+* trimmomatic : http://www.usadellab.org/cms/?page=trimmomatic
+* fastqc : https://www.bioinformatics.babraham.ac.uk/projects/download.html
+* multiqc : https://multiqc.info/
+* mash : https://github.com/marbl/Mash
+* BWA : https://sourceforge.net/projects/bio-bwa/files/    
+* SAMtools : http://www.htslib.org/download/        
+* BCFtools : http://www.htslib.org/download/  
+* VCFtools : https://github.com/vcftools/vcftools
+* SNPRelate : https://github.com/zhengxwen/SNPRelate
+* plink : http://zzz.bwh.harvard.edu/plink/download.shtml
+* fastStructure : https://rajanil.github.io/fastStructure/
+* pophelper : https://github.com/royfrancis/pophelper
+* vcf2phy : https://github.com/edgardomortiz/vcf2phylip
+* RAxML : https://cme.h-its.org/exelixis/software.html
+* ggtree : https://github.com/GuangchuangYu/ggtree
 
 I recommend installing these tools using conda (XXX). In my experience some incompatibilites between tools cannot be resolved, therefore it may be necessary to create multiple conda environments.
 `conda create`
