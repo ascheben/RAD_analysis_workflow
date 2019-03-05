@@ -115,7 +115,7 @@ We can check the p-values in the output file to ensure they are significant, and
 
 Finally we can use R to plot a tree based on the mash distance matrix.
 
-``
+```
 library("phangorn") # may have to install phangorn first  
 a <- read.table("Distances.txt", stringsAsFactors=F, sep="\t")  
 matrix <- reshape(a, direction="wide", idvar="V2", timevar="V1")  
@@ -123,7 +123,7 @@ distance <- as.dist(matrix[,-1], upper=F, diag=F)
 attr(distance, "Labels") <- matrix[,1]  
 plot(upgma(distance),cex = 0.5)  
 add.scale.bar(ask = TRUE)  
-``
+```
 
 ### _De novo_ assembly and SNP calling
 
@@ -134,19 +134,16 @@ ustacks -o . -m 3 -M 1 -p 1 -t gzfastq -f sample_01.1.fq.gz --name sample_01 -i 
 ``
 In the next four steps, a catalogue of stacks (i.e., RAD loci) for the complete data set is constructed and genotypes are called. R2 reads in the data directory are automatically integrated into the corresponding R1 RAD locus based on sample names.  
 
-``
+```
 popmap="/path/to/popmap.txt"
 datadir="/path/to/data/dir"
 threads="24"
 
 cstacks -n 1 -P ${datadir} -M ${popmap} -p ${threads}  
-
 sstacks -P ${datadir} -M ${popmap} -p ${threads}  
-
 tsv2bam -P ${datadir} --pe-reads-dir ${datadir} -M ${popmap} -t ${threads}  
-
 gstacks -P ${datadir} -M ${popmap} -t ${threads}  
-``  
+```
 
 The ``cstacks`` step is generally the computationally intensive step. Newer version of stacks can use existing catalogues as input with the ``-c`` option, which allows the catalogue construction step to be split into multiple consecutive steps if users are limited by walltime.  
 
