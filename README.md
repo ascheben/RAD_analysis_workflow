@@ -46,15 +46,17 @@ Illumina sequencing providers often upload reads in fastq format, although they 
 
 Below is an example of a real sample sheet. The most important information is the lane number and the IDs. If no sample sheet is provided with your run, you can create a mock sample sheet with this information and use that as input for ``bcl2fastq``.  
 
-``[Data]
+``
+[Data]  
 FCID,Lane,SampleID,SampleName,Index,Description,Control,Recipe,Operator,SampleProject
-HH3LTCCXY,7,1_FD01,Other,,external_id:ddRAD1;family_id:;pool_name:CST Batch 1_FD01-1;pool_limsid:2-1;guess_library_type:None;guess_library_name:None;guess_library_limsid:None;l_0:lib#180625_001_P_DNF lanes 1-2 & 7-8_G1|limsid#2-1|proc#CreateProductionCSTBatch|prot#CSTCreation;l_1:lib#LP7-NTP_D2|limsid#2-1|proc#AUTOMATED-MakeNTP|prot#SubmittedLibraryQC;l_2:lib#LP02-DCT_D2|limsid#2-1|proc#AUTOMATED-MakeDCT|prot#SubmittedLibraryQC;l_3:lib#LP8-TSP1_D2|limsid#2-1|proc#MakeTSP1|prot#SubmittedLibraryQC;l_4:lib#lib_B1|limsid#2-1|proc#CreateProductionSeqLabBatch|prot#SampleAccessioning&InitialQC;l_5:lib#FD01_11|limsid#XXX|proc#|prot#,N,,SIX,R_XXX_M002``  
+HH3LTCCXY,7,1_FD01,Other,,external_id:ddRAD1,N,,SIX,R_XXX_M002``  
 
 The fastq files will almost always contain multiple pooled (i.e., multiplexed) samples. There are many tools that can separate out (i.e., demultiplex) the individual samples. Here, for our RAD data we use ``process_radtags``, which is part of the stacks package and was developed especially for demultiplexing RRS read libraries. We will need to provide a text file containing the barcodes for each of our samples. Here is an example of the format expected by ``process_radtags``:  
 
-``AACCA	sample_01
-AAGGA	sample_02
-AATTA	sample_03
+``
+AACCA	sample_01  
+AAGGA	sample_02  
+AATTA	sample_03  
 ``
 
 An advantage of ``process_radtags`` is that unlike most demultiplexing tools, it can use information on restriction cut sites to quality control the reads using the option ``-e`` or , for ddRAD-seq, ``--renz_1`` and ``--renz_2``. Depending on the library preparation technique, reads may include the restriction site(s) targeted by the enzyme(s) used. A read missing the restriction site may be the result of technical errors. These reads should be discarded, particularly when you plan to de novo assemble your reads, because the assembly method we will use requires uniform reads. The rescue option ``-r`` will attempt to rescue restriction sites and barcodes if they have a minor mismatch with the expected sequence. In addition, we can discard reads containing unknown nucleotides (Ns) and low per base quality scores using the ``-c`` and ``-q`` options respectively. Additional information on options and a list of supported enzymes can be found [here](http://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php).  To demuliplex our paired-end sequences we can run the program like so:  
@@ -68,8 +70,22 @@ Demultiplexed reads may contain adapter contamination, which can hinder read ali
 If you are aligning reads to a reference genome, then you can remove the above ``MINLEN`` option, and adapters will simply be trimmed off the read. Tools like ``trimmomatic`` also allow trimming based on quality, however, de novo assembly with stacks relies on uniform read lengths and aggressive quality trimming can also reduce read alignment to a reference genome. Therefore quality trimming is not recommended.
 
 ### Quality control of reads
-``fastqc``  
-``multiqc``  
+Now that we have demultiplexed and filtered our samples, we should review read quality statistics and estimate the genetic similarity between samples. This will allow us to spot issues with the data immediately, before proceeding to more computationally intensive steps of the analysis. Using the tools ``fastqc`` and ``multiqc`` we can generate a single html quality report for our samples. To generate an individual quality report per sample, we first run ``fastqc`` in each fastq (or gzipped fastq) file in your directory of demultiplexed, adapter-trimmed samples.
+
+``for sample in *.fq; do fastqc ${sample};done``  
+
+<aside class="notice">
+Note that as with most analyses in this protocol ``fastqc`` runtime scales linearly with sample number and sample size. For large sample sizes (>100) and large read numbers (>1 Gigabases / sample), parallel execution of commands on a high-performance computing resource is suggested.
+</aside>
+
+Inspecting each quality report per sample is difficult for large sample numbers, therefore we use ``multiqc`` to generate a single master report from the individual ``fastqc`` reports.
+
+``multiqc /path/to/fastqc/outputs/``
+
+Duplicate reads
+Per Base Sequence Content
+![alt text](https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/common/images/multiqc_pb_seq_content_ddrad_exampl.png "Multiqc Per Base Sequence Content Report for ddRAD samples")
+
 ``mash``  
 
 ### De novo and reference based SNP calling
