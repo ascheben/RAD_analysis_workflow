@@ -16,6 +16,7 @@ IV. [Diversity analysis protocol](#Diversity-analysis-protocol)
 - [Principal component analysis](#PCA)  
 - [Structure analysis](#Structure-analysis)  
 - [Inferring a maximum likelihood phylogenetic tree](#Tree-building)  
+
 V. [References](#References)
 
 ## Introduction <a name="Introduction"></a>  
