@@ -38,7 +38,7 @@ The environment can then be loaded at any time with:
 `conda activate myenv`
 
 ## SNP calling protocol <a name="SNP-calling-protocol"></a>  
-SNP calling is simple from a users perspective when a high-quality reference genome is available, as is the case for most model organisms. In non-model organisms without reference genomes, reads are generally assembled de novo in order to call SNPs. De novo assembly remains an error-prone task and therefore, as a general rule, reference-based SNP calling is preferred.
+SNP calling is simple from a users perspective when a high-quality reference genome is available, as is the case for most model organisms. In non-model organisms without reference genomes, reads are generally assembled _de novo_ in order to call SNPs. _De novo_ assembly remains an error-prone task and therefore, as a general rule, reference-based SNP calling is preferred.
 ### Demultiplexing and adapter trimming
 Illumina sequencing providers often upload reads in fastq format, although they may also provide reads in the raw Illumina base call (bcl) format. For converting bcl to fastq, the [bcl2fastq](http://sapac.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) pipeline can be used. As its main input, the pipeline takes the path to the bcl run and the sample sheet made available by the sequencing provider. To convert the bcl data to fastq using 8 threads and default parameters, we can use:  
 
@@ -59,24 +59,22 @@ AAGGA	sample_02
 AATTA	sample_03  
 ``
 
-An advantage of ``process_radtags`` is that unlike most demultiplexing tools, it can use information on restriction cut sites to quality control the reads using the option ``-e`` or , for ddRAD-seq, ``--renz_1`` and ``--renz_2``. Depending on the library preparation technique, reads may include the restriction site(s) targeted by the enzyme(s) used. A read missing the restriction site may be the result of technical errors. These reads should be discarded, particularly when you plan to de novo assemble your reads, because the assembly method we will use requires uniform reads. The rescue option ``-r`` will attempt to rescue restriction sites and barcodes if they have a minor mismatch with the expected sequence. In addition, we can discard reads containing unknown nucleotides (Ns) and low per base quality scores using the ``-c`` and ``-q`` options respectively. Additional information on options and a list of supported enzymes can be found [here](http://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php).  To demuliplex our paired-end sequences we can run the program like so:  
+An advantage of ``process_radtags`` is that unlike most demultiplexing tools, it can use information on restriction cut sites to quality control the reads using the option ``-e`` or , for ddRAD-seq, ``--renz_1`` and ``--renz_2``. Depending on the library preparation technique, reads may include the restriction site(s) targeted by the enzyme(s) used. A read missing the restriction site may be the result of technical errors. These reads should be discarded, particularly when you plan to _de novo_ assemble your reads, because the assembly method we will use requires uniform reads. The rescue option ``-r`` will attempt to rescue restriction sites and barcodes if they have a minor mismatch with the expected sequence. In addition, we can discard reads containing unknown nucleotides (Ns) and low per base quality scores using the ``-c`` and ``-q`` options respectively. Additional information on options and a list of supported enzymes can be found [here](http://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php).  To demuliplex our paired-end sequences we can run the program like so:  
 
 ``process_radtags -i gzfastq -P -1 sample_R1.fastq.gz -2 sample_R2.fastq.gz -b ./barcodes.txt -o . -r -c -q --renz_1 pstI --renz_2 nlaIII``  
 
-Demultiplexed reads may contain adapter contamination, which can hinder read alignment and assembly. Reads containing adapter sequences should therefore be discarded for de novo assembly using stacks. This can be achieved in a range of ways; here will do it using ``trimmomatic``, by using the provided paired-end Illumina adapters and setting the ``MINLEN`` option to the read length.  
+Demultiplexed reads may contain adapter contamination, which can hinder read alignment and assembly. Reads containing adapter sequences should therefore be discarded for _de novo_ assembly using stacks. This can be achieved in a range of ways; here will do it using ``trimmomatic``, by using the provided paired-end Illumina adapters and setting the ``MINLEN`` option to the read length.  
 
 ``trimmomatic sample_01_R1.fq sample_01_R2.fq sample_01_pe_R1.fq sample_01_se_R1.fq sample_01_pe_R2.fq sample_01_se_R2.fq ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 MINLEN:120``  
 
-If you are aligning reads to a reference genome, then you can remove the above ``MINLEN`` option, and adapters will simply be trimmed off the read. Tools like ``trimmomatic`` also allow trimming based on quality, however, de novo assembly with stacks relies on uniform read lengths and aggressive quality trimming can also reduce read alignment to a reference genome. Therefore quality trimming is not recommended.
+If you are aligning reads to a reference genome, then you can remove the above ``MINLEN`` option, and adapters will simply be trimmed off the read. Tools like ``trimmomatic`` also allow trimming based on quality, however, _de novo_ assembly with stacks relies on uniform read lengths and aggressive quality trimming can also reduce read alignment to a reference genome. Therefore quality trimming is not recommended.
 
 ### Quality control of reads
 Now that we have demultiplexed and filtered our samples, we should review read quality statistics and estimate the genetic similarity between samples. This will allow us to spot issues with the data immediately, before proceeding to more computationally intensive steps of the analysis. Using the tools ``fastqc`` and ``multiqc`` we can generate a single html quality report for our samples. To generate an individual quality report per sample, we first run ``fastqc`` in each fastq (or gzipped fastq) file in your directory of demultiplexed, adapter-trimmed samples.
 
 ``for sample in *.fq; do fastqc ${sample};done``  
 
-<div class="alert alert-notice">
 Note that as with most analyses in this protocol ``fastqc`` runtime scales linearly with sample number and sample size. For large sample sizes (>100) and large read numbers (>1 Gigabases / sample), parallel execution of commands on a high-performance computing resource is suggested.
-</div>
 
 Inspecting each quality report per sample is difficult for large sample numbers, therefore we use ``multiqc`` to generate a single master report from the individual ``fastqc`` reports.
 
@@ -118,20 +116,37 @@ plot(upgma(distance),cex = 0.5)
 add.scale.bar(ask = TRUE)  
 ``
 
-### De novo and reference based SNP calling
-XXX
-
-#### De novo assembly and SNP calling
+### _De novo_ assembly and SNP calling
 Link to stacks homepage. Refer to manual pipeline for large datasets. Note that cstacks is most computationally intensive step and can be run in batches and results combined.
 
-Assemble and call  
-``denovo_map.pl``  
+http://catchenlab.life.illinois.edu/stacks/manual/#phand
+
+Assemble and call
+
+``
+ustacks
+ustacks -o . -m 3 -M 3 -p 1 -t gzfastq -f /scratch/pawsey0149/ascheben/bitou/raw/stacks/clean/10__KWIN12_249.fq.gz --name 10__KWIN12_249 -i 1
+``
+
+``
+popmap="/path/to/popmap.txt"
+datadir="/path/to/data/dir"
+threads="24"
+
+cstacks -n 3 -P ${datadir} -M ${popmap} -p ${threads}
+sstacks -P ${datadir} -M ${popmap} -p ${threads}
+tsv2bam -P ${datadir} -M ${popmap} -t ${threads}
+gstacks -P ${datadir} -M ${popmap} -t ${threads}
+
+``  
+
+
 Export vcf  
-``populations``  
+``populations -P ${datadir} -M ${popmap} -t ${threads} -p 1 --vcf``  
 
 Discuss crucial parameters for denovo_map.pl and link to Paris paper to show how to best explore parameter space for optimized denovo assembly of stacks.
 
-#### Mapping reads to a reference and SNP calling
+### Mapping reads to a reference and SNP calling
 
 Include references that suggest bwa-mem + samtools/bcftools is most effective
 
