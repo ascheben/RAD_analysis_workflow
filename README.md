@@ -157,7 +157,7 @@ Further details can be found in the [stacks manual](http://catchenlab.life.illin
 
 ### Mapping reads to a reference and SNP calling
 
-Include references that suggest bwa-mem + samtools/bcftools is most effective
+Include references that suggest bwa-mem + samtools/bcftools is most effective https://link.springer.com/article/10.1186/s12859-017-2000-6
 
 ``bwa-mem``   
 ``gstacks``  
@@ -166,7 +166,30 @@ Include references that suggest bwa-mem + samtools/bcftools is most effective
 
 ### Filtering SNPs
 
-``vcftools``  
+We employ an iterative filtering approach as discussed in [O'Leary et al.](https://onlinelibrary.wiley.com/doi/full/10.1111/mec.14792). By first removing individuals with extremely low genotyping rates, the number of SNPs passing quality filters is increased. Indels are removed and only biallelic SNPs are retained as both are generally rare and more difficult to analyse with standard software. Minor allele frequency (MAF) is further used to filter rare alleles with a threshold generally set between 0.01 and 0.05. The filters that will remove the most SNPs are usually the depth (``--minDP``) and the missingness (``max-missing``) filters. For heterozygous samples, read depths >=5 have been suggested to avoid undercalling of heterozygous genotypes ([Maruki & Lynch, 2017]( http://www.g3journal.org/content/7/5/1393)). Depth and missingness filters should be fine-tuned for each data set to find a balance between the quantity and quality of SNPs. As a final step, individuals with low genotyping rates based on the filtered SNPs are removed. A simple bash script can carry out all of these steps using ``vcftools``:
+
+```
+# Take input vcf file name from user input
+myvcf=$1  
+# Calculate individual missingness
+vcftools --vcf $myvcf --missing-indv --out ${myvcf%%.vcf}  
+# Identify samples with over 90% genotypes missing
+tail -n +2 ${myvcf%%.vcf}.imiss | awk '$5>0.9' | cut -f1 > ${myvcf%%.vcf}.rm  
+# Remove samples with high missingness and apply standard filters
+vcftools --vcf $myvcf --remove ${myvcf%%.vcf}.rm --maf 0.05 --max-missing 0.8 --remove-indels --max-alleles 2 --min-alleles 2 --minDP 5 --recode --out ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005  
+# Randomly keep only a single SNP from each RAD locus (always <500bp in size)
+vcftools --vcf ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005.recode.vcf --thin 500 --recode --out ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500  
+# Recalculate individual missingness
+vcftools --vcf ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500.recode.vcf --missing-indv --out ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500  
+# Identify samples with over 50% genotypes missing
+tail -n +2 ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500.imiss | awk '$5>0.5' | cut -f1 >${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005.rm  
+# Remove samples with over 50% missingness
+vcftools --vcf ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500.recode.vcf --remove ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005.rm --recode --out ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500_mim05  
+```   
+
+The script can be run on a vcf file with the command below.
+
+``./filter_vcf.sh my.vcf``
 
 ## Diversity analysis protocol <a name="Diversity-analysis-protocol"></a>  
 XXX
