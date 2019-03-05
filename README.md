@@ -74,9 +74,9 @@ Now that we have demultiplexed and filtered our samples, we should review read q
 
 ``for sample in *.fq; do fastqc ${sample};done``  
 
-<aside class="notice">
+<div class="alert alert-notice">
 Note that as with most analyses in this protocol ``fastqc`` runtime scales linearly with sample number and sample size. For large sample sizes (>100) and large read numbers (>1 Gigabases / sample), parallel execution of commands on a high-performance computing resource is suggested.
-</aside>
+</div>
 
 Inspecting each quality report per sample is difficult for large sample numbers, therefore we use ``multiqc`` to generate a single master report from the individual ``fastqc`` reports.
 
