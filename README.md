@@ -131,8 +131,7 @@ plot(upgma(distance),cex = 0.5)
 add.scale.bar(ask = TRUE)  
 ```
 
-### _De novo_ assembly and SNP calling <a name="De-novo-assembly-and-SNP-calling></a> 
-
+### _De novo_ assembly and SNP calling <a name="De-novo-assembly-and-SNP-calling"></a> 
 Reads are assmebled and SNPs are called using ``stacks`` in six consecutive steps. Firstly reads per samples are clustered into unique stacks with ``ustacks``. Although we are using paired-end reads, the R2 reads will only be integrated at the tsv2bam stage, so the firest three step of the analysis are carried out without the R2 reads. Below an example is shown for a single file (note that the value for ``-i`` should be incremented for each additional file).
 
 ``
@@ -170,7 +169,7 @@ Genotype data can be exported in various standard formats including vcf format. 
 
 Further details can be found in the [stacks manual](http://catchenlab.life.illinois.edu/stacks/manual/#phand).
 
-### Mapping reads to a reference and SNP calling <a name="Mapping-reads-to-a-reference-and-SNP-calling></a> 
+### Mapping reads to a reference and SNP calling <a name="Mapping-reads-to-a-reference-and-SNP-calling"></a> 
 
 [A recent comparison](https://link.springer.com/article/10.1186/s12859-017-2000-6) of standard SNP calling methods suggested that bwa-mem alignment followed by SNP calling with samtools/bcftools is the most broadly accurate method. Alternative methods include [freebayes](https://github.com/ekg/freebayes), [GATK](https://software.broadinstitute.org/gatk/) and stacks. Although GATK offers a more complex overall algorithm than samtools, including local realignment of reads, it may not always provide more accurate results, and it is geared toward human data. A major advantage of samtools over GATK is its higher speed and ease of use. 
 
@@ -196,7 +195,7 @@ samtools mpileup -d 1000 -I -go merged.bcf -ugf reference.fa -t DP merged.bam
 bcftools call --threads 4 -mv -O u -o merged.vcf merged.bcf 
 ```   
 
-### Filtering SNPs <a name="Filtering-SNPs></a> 
+### Filtering SNPs <a name="Filtering-SNPs"></a> 
 
 We employ an iterative filtering approach as discussed in [O'Leary et al.](https://onlinelibrary.wiley.com/doi/full/10.1111/mec.14792). By first removing individuals with extremely low genotyping rates, the number of SNPs passing quality filters is increased. Indels are removed and only biallelic SNPs are retained as both are generally rare and more difficult to analyse with standard software. Minor allele frequency (MAF) is further used to filter rare alleles with a threshold generally set between 0.01 and 0.05. The filters that will remove the most SNPs are usually the depth (``--minDP``) and the missingness (``max-missing``) filters. For heterozygous samples, read depths >=5 have been suggested to avoid undercalling of heterozygous genotypes ([Maruki & Lynch, 2017]( http://www.g3journal.org/content/7/5/1393)). Depth and missingness filters should be fine-tuned for each data set to find a balance between the quantity and quality of SNPs. As a final step, individuals with low genotyping rates based on the filtered SNPs are removed. A simple bash script can carry out all of these steps using ``vcftools``:
 
