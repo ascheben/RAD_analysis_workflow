@@ -82,13 +82,41 @@ Inspecting each quality report per sample is difficult for large sample numbers,
 
 ``multiqc /path/to/fastqc/outputs/``
 
-Duplicate reads
-Per Base Sequence Content
-[[https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/images/mqc_pbsq.png|alt=mqc_pbsq]]
+The most important quality parameters for our data are the quality scores, GC content and the adapter content. If samples fail these tests in multiqc, additional filtering may be required. Depending on the study organism, deviation from the expected GC content may indictae bacterial contamination, as bacteria have a much wider range of genomic GC content than most plants and animals. In contrast, it is alright for RAD samples to fail 'Per Base Sequence Content' tests, if the restriction site has not been removed from the samples. Because R1, R2 or both R1 and R2 reads are expected to begin with a restriction site, this is not an issue, and we can expect a pattern like the one from real paired end ddRAD-seq samples digested with pstI and nlaIII shown below.
 
-![alt text](https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/images/mqc_pbsq.png "Multiqc Per Base Sequence Content Report for ddRAD samples")
+![alt text](https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/images/mqc_pbsq.png "Multiqc Per Base Sequence Content Report for ddRAD samples")  
 
-``mash``  
+Duplicate reads are also expected in ddRAD-seq by design, as both the end and the start of the sequence is determined by a restriction site.  
+A final quality control step consists of a k-mer based analysis of genetic distances between samples. This can help identify contamination and mislabeling. Mash provides a rapid algorithm for estimating genetic distances between samples using sets of reads. First a sketch is produced for each sample (this can take a while depending on sample size).  
+
+``for sample in *.fq; do mash sketch -r -m 4 -s 1000 ${sample};done``  
+
+The minimum copies of each k-mer (``-m``) can be increased to ensure rare and therefore possibly spurious k-mers are excluded. Increasing the sketch size (``-s``) can increase the accuracy of the distance estimation.  
+
+Next the distance between each pair of sketches is estimated and written to an output file (this is fast).
+
+``
+for sample_x in *.msh; do
+    for sample_y in *.msh; do
+        mash  dist ${sample_x} ${sample_y}
+    done
+done > All_Distances.txt``
+
+We can check the p-values in the output file to ensure they are significant, and then we can remove the superfluous columns:
+
+``cut -f1-3 All_Distances.txt > Distances.txt``
+
+Finally we can use R to plot a tree based on the mash distance matrix.
+
+``
+library("phangorn") # may have to install phangorn first
+a <- read.table("Distances.txt", stringsAsFactors=F, sep="\t")
+matrix <- reshape(a, direction="wide", idvar="V2", timevar="V1")
+distance <- as.dist(matrix[,-1], upper=F, diag=F)
+attr(distance, "Labels") <- matrix[,1]
+plot(upgma(distance),cex = 0.5)
+add.scale.bar(ask = TRUE)
+``
 
 ### De novo and reference based SNP calling
 XXX
