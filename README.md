@@ -69,12 +69,12 @@ Demultiplexed reads may contain adapter contamination, which can hinder read ali
 
 For further analysis using ``stacks``, samples should be renamed using the expected naming scheme:  
 
-``
+```
 # R1 read
 <sample_name>.1.fq 
 # R2 read
 <sample_name>.2.fq 
-``
+```
 
 If you are aligning reads to a reference genome, then you can remove the above ``MINLEN`` option, and adapters will simply be trimmed off the read. Tools like ``trimmomatic`` also allow trimming based on quality, however, _de novo_ assembly with stacks relies on uniform read lengths and aggressive quality trimming can also reduce read alignment to a reference genome. Therefore quality trimming is not recommended.
 
