@@ -109,13 +109,13 @@ We can check the p-values in the output file to ensure they are significant, and
 Finally we can use R to plot a tree based on the mash distance matrix.
 
 ``
-library("phangorn") # may have to install phangorn first
-a <- read.table("Distances.txt", stringsAsFactors=F, sep="\t")
-matrix <- reshape(a, direction="wide", idvar="V2", timevar="V1")
-distance <- as.dist(matrix[,-1], upper=F, diag=F)
-attr(distance, "Labels") <- matrix[,1]
-plot(upgma(distance),cex = 0.5)
-add.scale.bar(ask = TRUE)
+library("phangorn") # may have to install phangorn first  
+a <- read.table("Distances.txt", stringsAsFactors=F, sep="\t")  
+matrix <- reshape(a, direction="wide", idvar="V2", timevar="V1")  
+distance <- as.dist(matrix[,-1], upper=F, diag=F)  
+attr(distance, "Labels") <- matrix[,1]  
+plot(upgma(distance),cex = 0.5)  
+add.scale.bar(ask = TRUE)  
 ``
 
 ### De novo and reference based SNP calling
