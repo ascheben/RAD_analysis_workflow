@@ -84,8 +84,9 @@ Inspecting each quality report per sample is difficult for large sample numbers,
 
 Duplicate reads
 Per Base Sequence Content
-[[https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/common/multiqc_pb_seq_content_ddrad_exampl.png|alt=pb_example]]
-![alt text](https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/common/images/multiqc_pb_seq_content_ddrad_exampl.png "Multiqc Per Base Sequence Content Report for ddRAD samples")
+[[https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/images/mqc_pbsq.png|alt=mqc_pbsq]]
+
+![alt text](https://github.com/ascheben/RAD_analysis_protocol/raw/master/src/images/mqc_pbsq.png "Multiqc Per Base Sequence Content Report for ddRAD samples")
 
 ``mash``  
 
