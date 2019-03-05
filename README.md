@@ -5,6 +5,11 @@ A bioinformatics protocol for analysing genotypes using restriction site associa
 I. [Introduction](#Introduction)  
 II. [Software requirements](#Software-requirements)  
 III. [SNP calling protocol](#SNP-calling-protocol)  
+     a. Demultiplexing and adapter trimming (#Demultiplexing-and-adapter-trimming)
+     b. Quality control of reads (#Quality-control-of-reads)
+     c. _De novo_ assembly and SNP calling (#De-novo-assembly-and-SNP-calling)
+     d. Mapping reads to a reference and SNP calling (#Mapping-reads-to-a-reference-and-SNP-calling)
+     e. Filtering SNPs (#Filtering-SNPs)
 IV. [Diversity analysis protocol](#Diversity-analysis-protocol)  
 V. [References](#References)
 
@@ -39,7 +44,7 @@ The environment can then be loaded at any time with:
 
 ## SNP calling protocol <a name="SNP-calling-protocol"></a>  
 SNP calling is simple from a users perspective when a high-quality reference genome is available, as is the case for most model organisms. In non-model organisms without reference genomes, reads are generally assembled _de novo_ in order to call SNPs. _De novo_ assembly remains an error-prone task and therefore, as a general rule, reference-based SNP calling is preferred.
-### Demultiplexing and adapter trimming
+### Demultiplexing and adapter trimming <a name="Demultiplexing-and-adapter-trimming"></a> 
 Illumina sequencing providers often upload reads in fastq format, although they may also provide reads in the raw Illumina base call (bcl) format. For converting bcl to fastq, the [bcl2fastq](http://sapac.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) pipeline can be used. As its main input, the pipeline takes the path to the bcl run and the sample sheet made available by the sequencing provider. To convert the bcl data to fastq using 8 threads and default parameters, we can use:  
 
 ``bcl2fastq --runfolder-dir /path/to/run/dir --sample-sheet=./mysamplesheet.csv -o /path/to/out/dir -r 8 -p 8 -w 8``  
@@ -78,7 +83,7 @@ For further analysis using ``stacks``, samples should be renamed using the expec
 
 If you are aligning reads to a reference genome, then you can remove the above ``MINLEN`` option, and adapters will simply be trimmed off the read. Tools like ``trimmomatic`` also allow trimming based on quality, however, _de novo_ assembly with stacks relies on uniform read lengths and aggressive quality trimming can also reduce read alignment to a reference genome. Therefore quality trimming is not recommended.
 
-### Quality control of reads
+### Quality control of reads <a name="Quality-control-of-reads"></a> 
 Now that we have demultiplexed and filtered our samples, we should review read quality statistics and estimate the genetic similarity between samples. This will allow us to spot issues with the data immediately, before proceeding to more computationally intensive steps of the analysis. Using the tools ``fastqc`` and ``multiqc`` we can generate a single html quality report for our samples. To generate an individual quality report per sample, we first run ``fastqc`` in each fastq (or gzipped fastq) file in your directory of demultiplexed, adapter-trimmed samples.
 
 ``for sample in *.fq; do fastqc ${sample};done``  
@@ -125,7 +130,7 @@ plot(upgma(distance),cex = 0.5)
 add.scale.bar(ask = TRUE)  
 ```
 
-### _De novo_ assembly and SNP calling
+### _De novo_ assembly and SNP calling <a name="De-novo-assembly-and-SNP-calling></a> 
 
 Reads are assmebled and SNPs are called using ``stacks`` in six consecutive steps. Firstly reads per samples are clustered into unique stacks with ``ustacks``. Although we are using paired-end reads, the R2 reads will only be integrated at the tsv2bam stage, so the firest three step of the analysis are carried out without the R2 reads. Below an example is shown for a single file (note that the value for ``-i`` should be incremented for each additional file).
 
@@ -164,7 +169,7 @@ Genotype data can be exported in various standard formats including vcf format. 
 
 Further details can be found in the [stacks manual](http://catchenlab.life.illinois.edu/stacks/manual/#phand).
 
-### Mapping reads to a reference and SNP calling
+### Mapping reads to a reference and SNP calling <a name="Mapping-reads-to-a-reference-and-SNP-calling></a> 
 
 [A recent comparison](https://link.springer.com/article/10.1186/s12859-017-2000-6) of standard SNP calling methods suggested that bwa-mem alignment followed by SNP calling with samtools/bcftools is the most broadly accurate method. Alternative methods include [freebayes](https://github.com/ekg/freebayes), [GATK](https://software.broadinstitute.org/gatk/) and stacks. Although GATK offers a more complex overall algorithm than samtools, including local realignment of reads, it may not always provide more accurate results, and it is geared toward human data. A major advantage of samtools over GATK is its higher speed and ease of use. 
 
@@ -190,7 +195,7 @@ samtools mpileup -d 1000 -I -go merged.bcf -ugf reference.fa -t DP merged.bam
 bcftools call --threads 4 -mv -O u -o merged.vcf merged.bcf 
 ```   
 
-### Filtering SNPs
+### Filtering SNPs <a name="Filtering-SNPs></a> 
 
 We employ an iterative filtering approach as discussed in [O'Leary et al.](https://onlinelibrary.wiley.com/doi/full/10.1111/mec.14792). By first removing individuals with extremely low genotyping rates, the number of SNPs passing quality filters is increased. Indels are removed and only biallelic SNPs are retained as both are generally rare and more difficult to analyse with standard software. Minor allele frequency (MAF) is further used to filter rare alleles with a threshold generally set between 0.01 and 0.05. The filters that will remove the most SNPs are usually the depth (``--minDP``) and the missingness (``max-missing``) filters. For heterozygous samples, read depths >=5 have been suggested to avoid undercalling of heterozygous genotypes ([Maruki & Lynch, 2017]( http://www.g3journal.org/content/7/5/1393)). Depth and missingness filters should be fine-tuned for each data set to find a balance between the quantity and quality of SNPs. As a final step, individuals with low genotyping rates based on the filtered SNPs are removed. A simple bash script can carry out all of these steps using ``vcftools``:
 
