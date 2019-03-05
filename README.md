@@ -4,12 +4,12 @@ A bioinformatics protocol for analysing genotypes using restriction site associa
 ## Table of contents
 I. [Introduction](#Introduction)  
 II. [Software requirements](#Software-requirements)  
-III. [SNP calling protocol](#SNP-calling-protocol)  
+III. [SNP calling protocol](#SNP-calling-protocol)
 - [Demultiplexing and adapter trimming](#Demultiplexing-and-adapter-trimming)  
 - [Quality control of reads](#Quality-control-of-reads)  
 - [_De novo_ assembly and SNP calling](#De-novo-assembly-and-SNP-calling)  
 - [Mapping reads to a reference and SNP calling](#Mapping-reads-to-a-reference-and-SNP-calling)  
-- [Filtering SNPs](#Filtering-SNPs)  
+- [Filtering SNPs](#Filtering-SNPs)
 IV. [Diversity analysis protocol](#Diversity-analysis-protocol)  
 V. [References](#References)
 
