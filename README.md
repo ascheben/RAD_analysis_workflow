@@ -157,12 +157,29 @@ Further details can be found in the [stacks manual](http://catchenlab.life.illin
 
 ### Mapping reads to a reference and SNP calling
 
-Include references that suggest bwa-mem + samtools/bcftools is most effective https://link.springer.com/article/10.1186/s12859-017-2000-6
+[A recent comparison](https://link.springer.com/article/10.1186/s12859-017-2000-6) of standard SNP calling methods suggested that bwa-mem alignment followed by SNP calling with samtools/bcftools is the most broadly accurate method. Alternative methods include [freebayes](https://github.com/ekg/freebayes), [GATK](https://software.broadinstitute.org/gatk/) and stacks. Although GATK offers a more complex overall algorithm than samtools, including local realignment of reads, it may not always provide more accurate results, and it is geared toward human data. A major advantage of samtools over GATK is its higher speed and ease of use. 
 
-``bwa-mem``   
-``gstacks``  
-``samtools``  
-``bcftools``  
+Reads are aligned to a reference genome using ``bwa mem``, sorted and converted from SAM to BAM format before indexing.
+
+```
+bwa mem reference.fa -t 1 -M -R '@RG\tID:sample_01\tPL:illumina\tPU:sample_01\tSM:sample_01' sample_01.1.fq sample_01.2.fq | samtools sort | samtools view -bS -h  > sample_01.bam
+samtools index sample_01
+``` 
+Simple alignment statistics per sample can be calculated using ``samtools flagstat``.  
+
+``samtools flagstat sample_01.bam``
+
+Following read alignment, bam files of all samples are merged into a single bam file.
+
+``samtools merge merged.bam *.bam``
+
+Large bam files can be split by chromosome (or scaffold, as the case may be) using [bamtools](https://github.com/pezmaster31/bamtools). If the genome consists of many small scaffolds, these can then be merged again into groups of scaffolds using ``samtools merge``. This then allows parallel processing of each chromosome/scaffold to accelerate SNP calling.
+
+For SNP calling, a pileup file is first created using ``samtools mpileup``. Next SNPs are called using bcftools, which can output genotypes in vcf format.
+``` 
+samtools mpileup -d 1000 -I -go merged.bcf -ugf reference.fa -t DP merged.bam 
+bcftools call --threads 4 -mv -O u -o merged.vcf merged.bcf 
+```   
 
 ### Filtering SNPs
 
