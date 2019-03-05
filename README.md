@@ -127,12 +127,21 @@ add.scale.bar(ask = TRUE)
 
 ### _De novo_ assembly and SNP calling
 
-Reads are assmebled and SNPs are called using ``stacks`` in six consecutive steps. Firstly reads per samples are clustered into unique stacks with ``ustacks``. Although we are using paired-end reads, the R2 reads will only be integrated at the tsv2bam stage, so the firest three step of the analysis are carried out without the R2 reads. Below an example is shown for a single file (note that ``-i`` should be incremented for each additional file).
+Reads are assmebled and SNPs are called using ``stacks`` in six consecutive steps. Firstly reads per samples are clustered into unique stacks with ``ustacks``. Although we are using paired-end reads, the R2 reads will only be integrated at the tsv2bam stage, so the firest three step of the analysis are carried out without the R2 reads. Below an example is shown for a single file (note that the value for ``-i`` should be incremented for each additional file).
 
 ``
 ustacks -o . -m 3 -M 1 -p 1 -t gzfastq -f sample_01.1.fq.gz --name sample_01 -i 1
 ``
-In the next four steps, a catalogue of stacks (i.e., RAD loci) for the complete data set is constructed and genotypes are called. R2 reads in the data directory are automatically integrated into the corresponding R1 RAD locus based on sample names.  
+A popmap file must be provided for the further analysis steps. This tab-separated file contains one row per sample in the dataset,  with on column for sample names and one for the corresponding population, for example:
+
+```
+sample_01   pop1
+sample_02   pop1
+sample_03   pop2
+sample_04   pop2
+```
+
+The number of populations in the popmap file can range from one to many. In the next four steps, a catalogue of stacks (i.e., RAD loci) for the complete data set is constructed and genotypes are called. R2 reads in the data directory are automatically integrated into the corresponding R1 RAD locus based on sample names.  
 
 ```
 popmap="/path/to/popmap.txt"
@@ -209,23 +218,46 @@ The script can be run on a vcf file with the command below.
 ``./filter_vcf.sh my.vcf``
 
 ## Diversity analysis protocol <a name="Diversity-analysis-protocol"></a>  
-XXX
 
 ### Population genetic summary statistics
-``populations`` 
+A range of useful summary statistics, incorporating population information, can be calculated using ``stacks populations``. A popmap file (described above) must be provided. Statistics can be calculated on nucleotide diversity (pi), heterozygosity and common population genetic statistics such as Fst.
+
+``populations -V merged_filtered.vcf -M popmap.txt --fst --fst_correction p_value`` 
 
 ### Principal component analysis
 
-``Rscript``
+``Rscript scripts/pca.R <input.vcf> <popmap.txt> <out_prefix>``
 
 ### Structure analysis
-``plink``   
-``structure.py`` 
+``vim -c 'g/^[^#]/s/.\{{-}}\t/chrUn\t/' -c 'wq' {input}``
+
+``plink --vcf {input} --double-id --allow-extra-chr --recode --out output/{params.prefix} --make-bed`` 
+          
+```
+for l in {1..10};do   
+    structure.py -K $l --input=snps --output=snps_structure  
+done  
+chooseK.py --input=snps_structure
+``` 
+
+``Rscript scripts/plotStructure.R {params.path} {params.names} {params.groups} {params.lenK} `` 
 
 ### Inferring a maximum likelihood phylogenetic tree
-``filtHet.py``  
-``vcf2phylip.py``  
-``RAxML``  
-``Rscript``  
+
+Alternative tools are [IQ-Tree](http://www.iqtree.org/) and [MrBayes](http://nbisweden.github.io/MrBayes/). 
+
+``./scripts/filterHets.py <input.vcf> 0.9 1 > <output.vcf> ``  
+
+``./vcf2phylip.py -i <input.vcf>``  
+
+
+```
+raxmlHPC-PTHREADS-SSE3 -f a \  
+        -V -T 12 -m ASC_GTRCAT --asc-corr lewis \
+        -p 12345 -x 12345 -# 100 -s snps.phy \
+        -n mysnps -o outgroup
+```
+
+``Rscript scripts/ggtree.R <raxml.tre> <popmap.txt>``  
 
 ## References <a name="References"></a>  
