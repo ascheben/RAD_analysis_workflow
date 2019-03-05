@@ -65,7 +65,16 @@ An advantage of ``process_radtags`` is that unlike most demultiplexing tools, it
 
 Demultiplexed reads may contain adapter contamination, which can hinder read alignment and assembly. Reads containing adapter sequences should therefore be discarded for _de novo_ assembly using stacks. This can be achieved in a range of ways; here will do it using ``trimmomatic``, by using the provided paired-end Illumina adapters and setting the ``MINLEN`` option to the read length.  
 
-``trimmomatic sample_01_R1.fq sample_01_R2.fq sample_01_pe_R1.fq sample_01_se_R1.fq sample_01_pe_R2.fq sample_01_se_R2.fq ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 MINLEN:120``  
+``trimmomatic sample_01.1.fq sample_01.2.fq sample_01_pe_R1.fq sample_01_se_R1.fq sample_01_pe_R2.fq sample_01_se_R2.fq ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 MINLEN:120``  
+
+For further analysis using ``stacks``, samples should be renamed using the expected naming scheme:  
+
+``
+# R1 read
+<sample_name>.1.fq 
+# R2 read
+<sample_name>.2.fq 
+``
 
 If you are aligning reads to a reference genome, then you can remove the above ``MINLEN`` option, and adapters will simply be trimmed off the read. Tools like ``trimmomatic`` also allow trimming based on quality, however, _de novo_ assembly with stacks relies on uniform read lengths and aggressive quality trimming can also reduce read alignment to a reference genome. Therefore quality trimming is not recommended.
 
@@ -117,34 +126,37 @@ add.scale.bar(ask = TRUE)
 ``
 
 ### _De novo_ assembly and SNP calling
-Link to stacks homepage. Refer to manual pipeline for large datasets. Note that cstacks is most computationally intensive step and can be run in batches and results combined.
 
-http://catchenlab.life.illinois.edu/stacks/manual/#phand
-
-Assemble and call
+Reads are assmebled and SNPs are called using ``stacks`` in six consecutive steps. Firstly reads per samples are clustered into unique stacks with ``ustacks``. Although we are using paired-end reads, the R2 reads will only be integrated at the tsv2bam stage, so the firest three step of the analysis are carried out without the R2 reads. Below an example is shown for a single file (note that ``-i`` should be incremented for each additional file).
 
 ``
-ustacks
-ustacks -o . -m 3 -M 3 -p 1 -t gzfastq -f /scratch/pawsey0149/ascheben/bitou/raw/stacks/clean/10__KWIN12_249.fq.gz --name 10__KWIN12_249 -i 1
+ustacks -o . -m 3 -M 1 -p 1 -t gzfastq -f sample_01.1.fq.gz --name sample_01 -i 1
 ``
+In the next four steps, a catalogue of stacks (i.e., RAD loci) for the complete data set is constructed and genotypes are called. R2 reads in the data directory are automatically integrated into the corresponding R1 RAD locus based on sample names.  
 
 ``
 popmap="/path/to/popmap.txt"
 datadir="/path/to/data/dir"
 threads="24"
 
-cstacks -n 3 -P ${datadir} -M ${popmap} -p ${threads}
-sstacks -P ${datadir} -M ${popmap} -p ${threads}
-tsv2bam -P ${datadir} -M ${popmap} -t ${threads}
-gstacks -P ${datadir} -M ${popmap} -t ${threads}
+cstacks -n 1 -P ${datadir} -M ${popmap} -p ${threads}  
 
+sstacks -P ${datadir} -M ${popmap} -p ${threads}  
+
+tsv2bam -P ${datadir} --pe-reads-dir ${datadir} -M ${popmap} -t ${threads}  
+
+gstacks -P ${datadir} -M ${popmap} -t ${threads}  
 ``  
 
+The ``cstacks`` step is generally the computationally intensive step. Newer version of stacks can use existing catalogues as input with the ``-c`` option, which allows the catalogue construction step to be split into multiple consecutive steps if users are limited by walltime.  
 
-Export vcf  
-``populations -P ${datadir} -M ${popmap} -t ${threads} -p 1 --vcf``  
+The key parameters for _de novo_ assembly of RAD reads are ``-M`` (maximum distance in nucleotides allowed between stacks during constuction of unique stacks per sample) and ``-n`` (number of mismatches allowed between sample loci during catalogue construction). It can be useful to explore the parameter space for optimized denovo assembly of RAD loci as discussed in detail in [Paris et al., 2017](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12775). As a general rule, it is recommended to use the same value for ``-n`` and ``-M``. The larger the value for these options, the more SNPs are generally identified. The optimal values for these key parameters depend largely on the genetic diversity of the sampled population, with more diverse populations requiring larger values. In less diverse populations larger distances allowed between stacks will lead to spurious SNP calls.
 
-Discuss crucial parameters for denovo_map.pl and link to Paris paper to show how to best explore parameter space for optimized denovo assembly of stacks.
+Genotype data can be exported in various standard formats including vcf format. To export a vcf file, we can use the following command.
+
+``populations -P ${datadir} -M ${popmap} -t ${threads} --vcf``  
+
+Further details can be found in the [stacks manual](http://catchenlab.life.illinois.edu/stacks/manual/#phand).
 
 ### Mapping reads to a reference and SNP calling
 
