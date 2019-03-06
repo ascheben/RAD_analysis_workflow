@@ -119,12 +119,13 @@ The minimum copies of each k-mer (``-m``) can be increased to ensure rare and th
 
 Next the distance between each pair of sketches is estimated and written to an output file (this is fast).
 
-``
-for sample_x in *.msh; do
-    for sample_y in *.msh; do
-        mash  dist ${sample_x} ${sample_y}
-    done
-done > All_Distances.txt``
+```
+for sample_x in *.msh; do  
+    for sample_y in *.msh; do  
+        mash  dist ${sample_x} ${sample_y}  
+    done  
+done > All_Distances.txt  
+```
 
 We can check the p-values in the output file to ensure they are significant, and then we can remove the superfluous columns:
 
