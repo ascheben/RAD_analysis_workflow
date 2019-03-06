@@ -89,6 +89,12 @@ For further analysis using ``stacks``, samples should be renamed using the expec
 
 If you are aligning reads to a reference genome, then you can remove the above ``MINLEN`` option, and adapters will simply be trimmed off the read. Tools like ``trimmomatic`` also allow trimming based on quality, however, _de novo_ assembly with stacks relies on uniform read lengths and aggressive quality trimming can also reduce read alignment to a reference genome. Therefore quality trimming is not recommended.
 
+When PCR is used to amplify DNA before sequencing, PCR duplicates can occur in reads and inflate coverage estimation. As genotype confidence is usually based on read depth, removing PCR duplicates helps increase the accuracy of genotype confidence estimation. Clones in RAD-seq data can be removed using a ``stacks`` tool by identifying identical reads in a sample.
+
+``clone_filter -1 ./sample_01.1.fq.gz -2 ./sample_01.2.fq.gz -i gzfastq -o ./clones_removed/``
+
+However, because all sequence reads from a ddRAD-seq locus are identical, clones cannot (!) be removed from ddRAD-seq if no random oligo tags were introduced into reads during molecular library construction (e.g., [Hoffberg et al., 2016](https://onlinelibrary.wiley.com/doi/full/10.1111/1755-0998.12566). When ddRAD-seq library construction uses a technique to mark duplicates, ``clone_filter`` can be used to remove these.
+
 ### Quality control of reads <a name="Quality-control-of-reads"></a> 
 Now that we have demultiplexed and filtered our samples, we should review read quality statistics and estimate the genetic similarity between samples. This will allow us to spot issues with the data immediately, before proceeding to more computationally intensive steps of the analysis. Using the tools ``fastqc`` and ``multiqc`` we can generate a single html quality report for our samples. To generate an individual quality report per sample, we first run ``fastqc`` in each fastq (or gzipped fastq) file in your directory of demultiplexed, adapter-trimmed samples.
 
