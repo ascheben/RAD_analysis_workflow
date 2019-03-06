@@ -64,11 +64,11 @@ HH3LTCCXY,7,1_FD01,Other,,external_id:ddRAD1,N,,SIX,R_XXX_M002``
 
 The fastq files will almost always contain multiple pooled (i.e., multiplexed) samples. There are many tools that can separate out (i.e., demultiplex) the individual samples. Here, for our RAD data we use ``process_radtags``, which is part of the stacks package and was developed especially for demultiplexing RRS read libraries. We will need to provide a text file containing the barcodes for each of our samples. Here is an example of the format expected by ``process_radtags``:  
 
-``
+```
 AACCA	sample_01  
 AAGGA	sample_02  
 AATTA	sample_03  
-``
+```
 
 An advantage of ``process_radtags`` is that unlike most demultiplexing tools, it can use information on restriction cut sites to quality control the reads using the option ``-e`` or , for ddRAD-seq, ``--renz_1`` and ``--renz_2``. Depending on the library preparation technique, reads may include the restriction site(s) targeted by the enzyme(s) used. A read missing the restriction site may be the result of technical errors. These reads should be discarded, particularly when you plan to _de novo_ assemble your reads, because the assembly method we will use requires uniform reads. The rescue option ``-r`` will attempt to rescue restriction sites and barcodes if they have a minor mismatch with the expected sequence. In addition, we can discard reads containing unknown nucleotides (Ns) and low per base quality scores using the ``-c`` and ``-q`` options respectively. Additional information on options and a list of supported enzymes can be found [here](http://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php).  To demuliplex our paired-end sequences we can run the program like so:  
 
