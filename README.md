@@ -36,7 +36,7 @@ Reduced representation sequencing (RRS) encompasses a suite of methods for sampl
 * plink : http://zzz.bwh.harvard.edu/plink/download.shtml
 * fastStructure : https://rajanil.github.io/fastStructure/
 * pophelper : https://github.com/royfrancis/pophelper
-* vcf2phy : https://github.com/edgardomortiz/vcf2phylip
+* vcf2phylip : https://github.com/edgardomortiz/vcf2phylip
 * RAxML : https://cme.h-its.org/exelixis/software.html
 * ggtree : https://github.com/GuangchuangYu/ggtree
 
