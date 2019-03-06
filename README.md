@@ -1,5 +1,5 @@
 # RAD analysis workflow
-A bioinformatics protocol for analysing genotypes using restriction site associated DNA sequencing data
+A bioinformatics workflow for analysing genotypes using restriction site associated DNA sequencing data
 
 ## Table of contents
 I. [Introduction](#Introduction)  
