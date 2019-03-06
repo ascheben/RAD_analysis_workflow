@@ -198,7 +198,11 @@ Following read alignment, bam files of all samples are merged into a single bam 
 
 ``samtools merge merged.bam *.bam``
 
-Large bam files can be split by chromosome (or scaffold, as the case may be) using [bamtools](https://github.com/pezmaster31/bamtools). If the genome consists of many small scaffolds, these can then be merged again into groups of scaffolds using ``samtools merge``. This then allows parallel processing of each chromosome/scaffold to accelerate SNP calling.
+Large bam files can be split by chromosome (or scaffold, as the case may be) using [bamtools](https://github.com/pezmaster31/bamtools).  
+
+``bamtools split -in merged.bam -reference``
+
+If the genome consists of many small scaffolds, these can then be merged again into groups of scaffolds using ``samtools merge``. This then allows parallel processing of each chromosome/scaffold to accelerate SNP calling.
 
 For SNP calling, a pileup file is first created using ``samtools mpileup``. Next SNPs are called using bcftools, which can output genotypes in vcf format.
 ``` 
