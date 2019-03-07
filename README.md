@@ -208,7 +208,7 @@ If the genome consists of many small scaffolds, these can then be merged again i
 For SNP calling, a pileup file is first created using ``samtools mpileup``. Next SNPs are called using bcftools, which can output genotypes in vcf format.
 ``` 
 samtools mpileup -d 1000 -I -go merged.bcf -ugf reference.fa -t DP merged.bam 
-bcftools call --threads 4 -mv -O u -o merged.vcf merged.bcf 
+bcftools call --threads 4 -mv -O v -o merged.vcf merged.bcf 
 ```   
 
 ### Filtering SNPs <a name="Filtering-SNPs"></a> 
