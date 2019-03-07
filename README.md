@@ -243,7 +243,7 @@ The script can be run on a vcf file with the command below.
 ### Population genetic summary statistics <a name="Population-genetic-summary-statistics"></a>  
 A range of useful summary statistics, incorporating population information, can be calculated using ``stacks populations``. A popmap file (described above) must be provided. Statistics can be calculated on nucleotide diversity (pi), heterozygosity and common population genetic statistics such as Fst.
 
-``populations -V merged_filtered.vcf -M popmap.txt --fst --fst_correction p_value`` 
+``populations -V merged_filtered.vcf -M popmap.txt --fstats --fst_correction p_value -O .`` 
 
 ### Principal component analysis <a name="PCA"></a>  
 Principal component analysis (PCA) provides a straightforward approach to obtain and overview of genetic diversity within the data. Using ``SNPRelate`` and the ``ggrepel`` package, we can carry out the PCA and plot the results for our samples. The popmap information is used to colour samples by population. 
