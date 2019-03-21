@@ -3,7 +3,7 @@ A bioinformatics workflow for analysing genotypes using restriction site associa
 
 ## Table of contents
 I. [Introduction](#Introduction)
-- [Sequencing library preparation](#Library prep)
+- [Sequencing library preparation](#Library prep)  
 
 II. [Software requirements](#Software-requirements)  
 III. [SNP calling protocol](#SNP-calling-protocol)  
