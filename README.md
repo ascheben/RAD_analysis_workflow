@@ -283,7 +283,7 @@ A phylogenetic tree is a further approach to analyse diversity and relationships
 
 Invariant sites with only heterozygous calls in all called individuals must be filtered. A simple python script can be used to remove all SNPs without an alternative alleles call and with more than 90% heterozygous calls. 
 
-``./scripts/filterHets.py <input.vcf> 0.9 1 > <output.vcf> ``  
+``scripts/filterHets.py <input.vcf> 0.9 1 > <output.vcf> ``  
 
 Next the vcf file is converted to phylip alignment format using [vcf2phylip](https://github.com/edgardomortiz/vcf2phylip).
 
