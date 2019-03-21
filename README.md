@@ -2,7 +2,7 @@
 A bioinformatics workflow for analysing genotypes using restriction site associated DNA sequencing data
 
 ## Table of contents
-I. [Introduction](#Introduction)
+I. [Introduction](#Introduction)  
 II. [Software requirements](#Software-requirements)  
 III. [SNP calling protocol](#SNP-calling-protocol)  
 - [Demultiplexing and adapter trimming](#Demultiplexing-and-adapter-trimming)  
