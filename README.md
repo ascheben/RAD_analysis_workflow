@@ -17,7 +17,7 @@ IV. [Diversity analysis protocol](#Diversity-analysis-protocol)
 - [Structure analysis](#Structure-analysis)  
 - [Inferring a maximum likelihood phylogenetic tree](#Tree-building)  
 
-V. [References](#References)
+V. [Reference](#References)
 
 ## Introduction <a name="Introduction"></a>  
 Reduced representation sequencing (RRS) encompasses a suite of methods for sampling a limited number of regions from a genome for DNA sequencing ([Scheben et al., 2017](https://onlinelibrary.wiley.com/doi/full/10.1111/pbi.12645)). The main advantage of RRS over whole genome sequencing is that it substantially reduces the cost of generating sequencing data with adequate coverage for accurately calling single nucleotide polymorphisms (SNPs). Several RRS approaches including RAD-seq ([Miller et al., 2007](https://genome.cshlp.org/content/17/2/240.short); [Baird et al., 2008](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0003376)) and ddRAD-seq ([Peterson et al., 2012](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0037135)) use restriction enzymes to digest the genome. DNA fragments within a suitable size range are then sequenced. In this bioinformatics protocol we will go through the most common steps in the ddRAD-seq analysis pipeline, starting with raw reads and concluding with an exploration of genetic structure and diversity. 
