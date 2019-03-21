@@ -226,7 +226,7 @@ vcftools --vcf $myvcf --missing-indv --out ${myvcf%%.vcf}
 tail -n +2 ${myvcf%%.vcf}.imiss | awk '$5>0.9' | cut -f1 > ${myvcf%%.vcf}.rm  
 # Remove samples with high missingness and apply standard filters
 vcftools --vcf $myvcf --remove ${myvcf%%.vcf}.rm --maf 0.05 --max-missing 0.8 --remove-indels --max-alleles 2 --min-alleles 2 --minDP 5 --recode --out ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005  
-# Randomly keep only a single SNP from each RAD locus (always <500bp in size)
+# Randomly keep only a single SNP from each RAD locus based on distance between SNPs
 vcftools --vcf ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005.recode.vcf --thin 500 --recode --out ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500  
 # Recalculate individual missingness
 vcftools --vcf ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500.recode.vcf --missing-indv --out ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500  
@@ -239,6 +239,8 @@ vcftools --vcf ${myvcf%%.vcf}_mim09_biallelic_minDP5_mm08_maf005_thin500.recode.
 The script can be run on a vcf file with the command below.
 
 ``./filter_vcf.sh my.vcf``
+
+The SNP thinning step should be used with caution when reads were mapped to a reference genome, as over- or under-thinning can occur. In this case the thinning distance needs to be carefully tuned, or the thinning step can be substituted by linkage disequilibrium filtering. These steps are only required when SNPs need to be independent, for example when analysing population structure as shown below.
 
 ## Diversity analysis protocol <a name="Diversity-analysis-protocol"></a>  
 
