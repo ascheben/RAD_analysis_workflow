@@ -300,4 +300,8 @@ The main output of the above RAxML command is the best-scoring ML tree with supp
 
 ## Reference <a name="References"></a>  
 
+Ting Xiang Neik, Anita Severn-Ellis, Nur Shuhadah Mohd Saad, Armin Scheben, Aneeta Pradhan, Jacqueline Batley (2019) Genotyping for species identification and diversity assessment using genotyping-by-sequencing (GBS) methods. Methods Mol. Biol. (in prep)
+
+
+
 
