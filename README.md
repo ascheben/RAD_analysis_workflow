@@ -279,7 +279,7 @@ The input file path must point to the directory containg the ``meanQ`` files gen
 
 ### Inferring a maximum likelihood phylogenetic tree <a name="Tree-building"></a>  
 
-A phylogenetic tree is a further approach to analyse diversity and relationships within the sampled population. RAxML is a widely used tool for inferring trees using maximum likelihood (ML), offering fast and multithreaded algorithms. Alternative tools are [IQ-Tree](http://www.iqtree.org/) and [MrBayes](http://nbisweden.github.io/MrBayes/). RAxML not originally designed for analysing SNP data, therefore appropriate data preparation and careful model selection are required.
+A phylogenetic tree is a further approach to analyse diversity and relationships within the sampled population. RAxML is a widely used tool for inferring trees using maximum likelihood (ML), offering fast and multithreaded algorithms. Alternative tools are [IQ-Tree](http://www.iqtree.org/) and [MrBayes](http://nbisweden.github.io/MrBayes/). RAxML was not originally designed for analysing SNP data, therefore appropriate data preparation and careful model selection are required.
 
 Invariant sites with only heterozygous calls in all called individuals must be filtered. A simple python script can be used to remove all SNPs without an alternative alleles call and with more than 90% heterozygous calls. 
 
@@ -302,7 +302,7 @@ The main output of the above RAxML command is the best-scoring ML tree with supp
 
 When adapting this workflow for your analyses, please cite all of the tools you use. The citation for the workflow provided here is shown below.
 
-Ting Xiang Neik, Anita Severn-Ellis, Nur Shuhadah Mohd Saad, Armin Scheben, Aneeta Pradhan, Jacqueline Batley (2019) Genotyping for species identification and diversity assessment using genotyping-by-sequencing (GBS) methods. Methods Mol. Biol. (in prep)
+Anita Severn-Ellis,  Armin Scheben,Ting Xiang Neik, Nur Shuhadah Mohd Saad, Aneeta Pradhan, Jacqueline Batley (2019) Genotyping for species identification and diversity assessment using genotyping-by-sequencing (GBS) methods. Methods Mol. Biol. (in prep)
 
 
 
