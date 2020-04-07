@@ -257,7 +257,7 @@ Principal component analysis (PCA) provides a straightforward approach to obtain
 ### Structure analysis <a name="Structure-analysis"></a>  
 An approach complementary to PCA is structure analysis using a Bayesian framework. The software ``fastStructure``  can be used to carry out structure analysis on large SNP datasets. Before analysis, the vcf file must be converted to plink format. The ``plink`` tools was developed for human data and is not able to deal with diverse chromosome or scaffold names in the vcf file. Therefore, for the purpose of the structure analysis, the scaffold names in the vcf can be substituted with 'chrUn' using ``vim``. Depending on the chromosome or scaffold names in a specific dataset, this step may be superfluous.
 
-``vim -c 'g/^[^#]/s/.\{{-}}\t/chrUn\t/' -c 'wq' {input}``
+``vim -c 'g/^[^#]/s/.\{-}\t/chrUn\t/' -c 'wq' {input}``
 
 The vcf file can then be converted to plink format.
 
