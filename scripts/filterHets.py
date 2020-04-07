@@ -28,7 +28,8 @@ with open(vcf) as tsv:
                 elif g == "0/0":
                     hom_count = hom_count + 1
             # print SNP if user-defined thresholds are met
-            if (het_count / num_samples) <= cutoff and alt_count >= minalt :
+	    # we also need to avoid cases without a hom allele
+            if (het_count / num_samples) <= cutoff and alt_count >= minalt and hom_count > 0:
                 print(*line, sep = '\t')
 	# print all comment lines
         else:
