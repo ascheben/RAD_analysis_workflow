@@ -59,11 +59,11 @@ Illumina sequencing providers often upload reads in fastq format, although they 
 
 Below is an example of a real sample sheet. The most important information is the lane number and the IDs. If no sample sheet is provided with your run, you can create a mock sample sheet with this information and use that as input for ``bcl2fastq``.  
 
-``
+```
 [Data]
-
 FCID,Lane,SampleID,SampleName,Index,Description,Control,Recipe,Operator,SampleProject
-HH3LTCCXY,7,1_FD01,Other,,external_id:ddRAD1,N,,SIX,R_XXX_M002``  
+HH3LTCCXY,7,1_FD01,Other,,external_id:ddRAD1,N,,SIX,R_XXX_M002
+```  
 
 The fastq files will almost always contain multiple pooled (i.e., multiplexed) samples. There are many tools that can separate out (i.e., demultiplex) the individual samples. Here, for our RAD data we use ``process_radtags``, which is part of the stacks package and was developed especially for demultiplexing RRS read libraries. We will need to provide a text file containing the barcodes for each of our samples. Here is an example of the format expected by ``process_radtags``:  
 
