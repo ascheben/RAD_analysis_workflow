@@ -60,7 +60,8 @@ Illumina sequencing providers often upload reads in fastq format, although they 
 Below is an example of a real sample sheet. The most important information is the lane number and the IDs. If no sample sheet is provided with your run, you can create a mock sample sheet with this information and use that as input for ``bcl2fastq``.  
 
 ``
-[Data]  
+[Data]
+
 FCID,Lane,SampleID,SampleName,Index,Description,Control,Recipe,Operator,SampleProject
 HH3LTCCXY,7,1_FD01,Other,,external_id:ddRAD1,N,,SIX,R_XXX_M002``  
 
